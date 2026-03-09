@@ -15,64 +15,79 @@ prompt.question(`list | add | update | delete\n`, (args) => {
         tasks = []
     }
 
-    if (args.includes("list")) {
-        const parts = args.split(" ")
-        if (parts[1] === "done") {
-            const doneTasks = tasks.filter(task => task.status === "done")
-            console.log(doneTasks)
-        }
-        else if (parts[1] === "todo") {
-            const todoTasks = tasks.filter(task => task.status === "todo")
-            console.log(todoTasks)
-        }
-        else if (parts[1] === "in-progress") {
-            const inprogressTasks = tasks.filter(task => task.status === "in-progress")
-            console.log(inprogressTasks)
-        }
-        else {
-            console.log(tasks)
-        }
+    const parts = args.split(" ")
+
+    if (parts[0] === "list") {
+        const list = args === "list"
+        const done = parts[1] === "done"
+        const todo = parts[1] === "todo"
+        const inprogress = parts[1] === "in-progress"
+        console.log(list, done, todo, inprogress)
+
+        if (list) console.log(tasks)
+        else if (done) filterTasks("done", tasks)
+        else if (todo) filterTasks("todo", tasks)
+        else if (inprogress) filterTasks("in-progress", tasks)
+        else console.error(`Not a valid status.\ndone | todo | in-progress`)
     }
-    else if (args.includes("add")) {
-        const parts = args.split(" ")
+    else if (parts[0] === "add") {
         let description = parts.slice(1).join(" ")
         description = description.replace(/^["'](.*)["']$/, '$1')
 
         const newTask = {
             id: tasks.length + 1,
             description: description,
-            status: "todo"
+            status: "todo",
+            createdAt: new Date().toISOString()
         }
 
         tasks.push(newTask)
-        fs.writeFileSync("data/tasks.json", JSON.stringify(tasks, null, 2))
-        console.log(`Task added successfully (ID: ${newTask.id})`)
+        handleConfirmation(`Task added successfully (ID: ${newTask.id})`, tasks)
     }
-    else if (args.includes("update")) {
-        const parts = args.split(" ")
+    else if (parts[0] === "update") {
+        const id = parts[1]
+        const isValidNumber = Number(id)
+        if (!isValidNumber) console.log("Invalid ID.")
+
         let newDescription = parts.slice(2).join(" ")
         newDescription = newDescription.replace(/^["'](.*)["']$/, '$1')
-        const id = parts[1]
-        let updateTask = tasks.find(task => task.id === parseInt(id))
-        
-        if (updateTask) {
-            updateTask.description = newDescription
+        let taskToUpdate = tasks.find(task => task.id === parseInt(id))
+
+        if (!taskToUpdate) {
+            console.error(`Task with ID: ${id} not found.`)
+        } 
+        else if (!newDescription) {
+            console.error("Please write something.")
         }
-        
-        fs.writeFileSync("data/tasks.json", JSON.stringify(tasks, null, 2))
-        console.log(`Task updated successfully (ID: ${id})`)
+        else {
+            taskToUpdate.description = newDescription
+            handleConfirmation(`Task updated successfully (ID: ${id})`, tasks)
+        }
     }
-    else if (args.includes("delete")) {
-        const parts = args.split(" ")
+    else if (parts[0] === "delete") {
         const id = parts[1]
-        let deleteTask = tasks.find(task => task.id === parseInt(id))
-        let indToRemove = tasks.indexOf(deleteTask, 1)
-        tasks.splice(indToRemove, 1)
-        fs.writeFileSync("data/tasks.json", JSON.stringify(tasks, null, 2))
-        console.log(`Deleted task: ${deleteTask.description} of ID: ${id}`)
+        let taskToDelete = tasks.find(task => task.id === parseInt(id))
+        
+        if (!taskToDelete) {
+            console.error(`Task with ID: ${id} not found.`)
+        } else {
+            let indexToRemove = tasks.indexOf(taskToDelete)
+            tasks.splice(indexToRemove, 1)
+            handleConfirmation(`Deleted task: "${taskToDelete.description}" (ID: ${id})`, tasks)
+        }
     }
     else {
-        console.log("Not a valid command.")
+        console.log(`Not a valid command.\nlist | add | update | delete`)
     }
     prompt.close()
 })
+
+function filterTasks(status, tasks) {
+    const filteredTasks = tasks.filter(task => task.status === `${status}`)
+    console.log(filteredTasks)
+}
+
+function handleConfirmation(message, tasksToSave) {
+    fs.writeFileSync("data/tasks.json", JSON.stringify(tasksToSave, null, 2))
+    console.log(message)
+}
