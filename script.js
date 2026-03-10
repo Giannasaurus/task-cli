@@ -18,15 +18,13 @@ prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
 
     if (parts[0] === "list") {
         const list = args === "list"
-        const done = parts[1] === "done"
-        const todo = parts[1] === "todo"
-        const inprogress = parts[1] === "in-progress"
-
-        if (list) console.log(tasks)
-        else if (done) filterTasks("done", tasks)
-        else if (todo) filterTasks("todo", tasks)
-        else if (inprogress) filterTasks("in-progress", tasks)
-        else console.error(`Not a valid status.\ndone | todo | in-progress`)
+        
+        if (parts[1] === "done" || parts[1] === "todo" || parts[1] === "in-progress") {
+            filterTasks(parts[1], tasks)
+        }
+        else {
+            console.error(`Not a valid status.\ndone | todo | in-progress`)
+        }
     }
     else if (parts[0] === "add") {
         let description = parts.slice(1).join(" ")
