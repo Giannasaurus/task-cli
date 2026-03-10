@@ -69,13 +69,13 @@
   {
     "id": 14,
     "description": "enter the backrooms",
-    "status": "todo",
+    "status": "done",
     "createdAt": "2026-03-09T09:09:12.509Z"
   },
   {
     "id": 15,
-    "description": "hi",
-    "status": "todo",
+    "description": "say ayo",
+    "status": "done",
     "createdAt": "2026-03-09T09:11:59.696Z"
   }
 ]

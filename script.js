@@ -2,9 +2,8 @@ const readline = require('readline')
 const process = require('process')
 const fs = require('fs')
 
-console.log("task-cli")
 const prompt = readline.createInterface(process.stdin, process.stdout)
-prompt.question(`list | add | update | delete\n`, (args) => {
+prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
     let tasks = []
 
     try {
@@ -22,7 +21,6 @@ prompt.question(`list | add | update | delete\n`, (args) => {
         const done = parts[1] === "done"
         const todo = parts[1] === "todo"
         const inprogress = parts[1] === "in-progress"
-        console.log(list, done, todo, inprogress)
 
         if (list) console.log(tasks)
         else if (done) filterTasks("done", tasks)
@@ -55,7 +53,7 @@ prompt.question(`list | add | update | delete\n`, (args) => {
 
         if (!taskToUpdate) {
             console.error(`Task with ID: ${id} not found.`)
-        } 
+        }
         else if (!newDescription) {
             console.error("Please write something.")
         }
@@ -67,7 +65,7 @@ prompt.question(`list | add | update | delete\n`, (args) => {
     else if (parts[0] === "delete") {
         const id = parts[1]
         let taskToDelete = tasks.find(task => task.id === parseInt(id))
-        
+
         if (!taskToDelete) {
             console.error(`Task with ID: ${id} not found.`)
         } else {
@@ -75,6 +73,27 @@ prompt.question(`list | add | update | delete\n`, (args) => {
             tasks.splice(indexToRemove, 1)
             handleConfirmation(`Deleted task: "${taskToDelete.description}" (ID: ${id})`, tasks)
         }
+    }
+    else if (parts[0].includes("mark-")) {
+        let splitParts = parts[0].split("-")
+        let stat = splitParts.slice(1).join("-")
+        let id = parts[1]
+        let taskToMark = tasks.find(task => task.id === parseInt(id))
+        
+        if ((stat === "done" || stat === "todo" || stat === "in-progress") && taskToMark) {
+            taskToMark.status = stat
+            handleConfirmation(`Updated task status to ${taskToMark.status} (ID: ${id})`, tasks)
+        }
+        else {
+            console.log("Invalid status/ID.")
+        }
+    }
+    else if (parts[0] === "help") {
+        console.log("list [done | todo | in-progress] [--table]")
+        console.log(`add <\"description\">`)
+        console.log(`update <id> <\"description\">`)
+        console.log("delete <id>")
+        console.log("mark-[done | todo | in-progress]")
     }
     else {
         console.log(`Not a valid command.\nlist | add | update | delete`)
