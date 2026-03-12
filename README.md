@@ -1,8 +1,8 @@
 # task-cli
 A command-line application to manage tasks
 
-:link: Roadmap.sh Project URL
-https://roadmap.sh/projects/task-tracker  
+:link: Roadmap.sh project link https://roadmap.sh/projects/task-tracker <br>
+:link: Roadmap.sh submitted solution https://roadmap.sh/projects/task-tracker/solutions?u=6760835b8fe51199da8df04b   
 
 ## Key Features
 
