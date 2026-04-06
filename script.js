@@ -15,13 +15,11 @@ prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
     }
 
     const parts = args.split(" ")
-    
+
     if (parts[0] === "list") {
         const list = args === "list"
-        if (list) {
-            console.log(tasks)
-        }
-        else if (parts[1] === "done" || parts[1] === "todo" || parts[1] === "in-progress") {
+        
+        if (parts[1] === "done" || parts[1] === "todo" || parts[1] === "in-progress") {
             filterTasks(parts[1], tasks)
         }
         else {
@@ -93,7 +91,7 @@ prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
         console.log(`add <\"description\">`)
         console.log(`update <id> <\"description\">`)
         console.log("delete <id>")
-        console.log("mark-[done | todo | in-progress] <id>")
+        console.log("mark-[done | todo | in-progress]")
     }
     else {
         console.log(`Not a valid command.\nlist | add | update | delete`)
