@@ -14,6 +14,7 @@ A command-line application to manage tasks
 
 ## TODO
 
+* do not close prompt after every command
 * handle errors more gracefully
 * handle type-checking edge cases; nuances in `Number` types
 * improve ID-generation
