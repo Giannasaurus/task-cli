@@ -16,4 +16,3 @@ A command-line application to manage tasks
 
 * do not close prompt after every command
 * handle errors more gracefully
-* flag for status
