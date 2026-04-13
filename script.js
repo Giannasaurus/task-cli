@@ -44,8 +44,11 @@ prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
     }
     else if (parts[0] === "update") {
         const id = parts[1]
-        const isValidNumber = Number(id)
-        if (!isValidNumber) console.log("Invalid ID.")
+        if (isNaN(id) || id <= 0) {
+            console.log("Invalid ID.")
+            prompt.close()
+            return
+        }
 
         let newDescription = parts.slice(2).join(" ")
         newDescription = newDescription.replace(/^["'](.*)["']$/, '$1')
