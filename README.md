@@ -7,9 +7,10 @@ A command-line application to manage tasks
 ## Key Features
 
 * Data persistence through a JSON file database
-* List, add, update, and delete tasks
-* List done, todo, and in-progress subcommands
-* Mark as done, todo, and in-progress subcommands
+* List all tasks or filter by status (done, todo, in-progress) with improved formatting
+* Display tasks in table format using the --table option
+* Add, update, and delete tasks with proper validation
+* Mark tasks as done, todo, or in-progress
 * Help command
 
 ## TODO
