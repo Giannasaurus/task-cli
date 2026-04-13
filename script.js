@@ -17,13 +17,15 @@ prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
     const parts = args.split(" ")
 
     if (parts[0] === "list") {
-        const list = args === "list"
-        
-        if (parts[1] === "done" || parts[1] === "todo" || parts[1] === "in-progress") {
-            filterTasks(parts[1], tasks)
-        }
-        else {
-            console.error(`Not a valid status.\ndone | todo | in-progress`)
+        if (parts[1]) {
+            if (parts[1] === "done" || parts[1] === "todo" || parts[1] === "in-progress") {
+                filterTasks(parts[1], tasks)
+            } else {
+                console.error(`Not a valid status.\ndone | todo | in-progress`)
+            }
+        } else {
+            console.log("All tasks:")
+            tasks.forEach(task => console.log(`${task.id}: ${task.description} [${task.status}]`))
         }
     }
     else if (parts[0] === "add") {
