@@ -17,15 +17,32 @@ prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
     const parts = args.split(" ")
 
     if (parts[0] === "list") {
+        let status = null;
+        let table = false;
         if (parts[1]) {
-            if (parts[1] === "done" || parts[1] === "todo" || parts[1] === "in-progress") {
-                filterTasks(parts[1], tasks)
+            if (parts[1] === "--table") {
+                table = true;
+                if (parts[2] && (parts[2] === "done" || parts[2] === "todo" || parts[2] === "in-progress")) {
+                    status = parts[2];
+                }
+            } else if (parts[1] === "done" || parts[1] === "todo" || parts[1] === "in-progress") {
+                status = parts[1];
+                if (parts[2] === "--table") {
+                    table = true;
+                }
             } else {
                 console.error(`Not a valid status.\ndone | todo | in-progress`)
             }
+        }
+        if (status) {
+            filterTasks(status, tasks, table)
         } else {
-            console.log("All tasks:")
-            tasks.forEach(task => console.log(`${task.id}: ${task.description} [${task.status}]`))
+            if (table) {
+                console.table(tasks.map(task => ({ id: task.id, description: task.description, status: task.status })))
+            } else {
+                console.log("All tasks:")
+                tasks.forEach(task => console.log(`${task.id}: ${task.description} [${task.status}]`))
+            }
         }
     }
     else if (parts[0] === "add") {
@@ -104,13 +121,17 @@ prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
     prompt.close()
 })
 
-function filterTasks(status, tasks) {
+function filterTasks(status, tasks, table = false) {
     const filteredTasks = tasks.filter(task => task.status === status)
-    if (filteredTasks.length === 0) {
-        console.log(`No tasks with status ${status}`)
+    if (table) {
+        console.table(filteredTasks.map(task => ({ id: task.id, description: task.description, status: task.status })))
     } else {
-        console.log(`${status} tasks:`)
-        filteredTasks.forEach(task => console.log(`${task.id}: ${task.description}`))
+        if (filteredTasks.length === 0) {
+            console.log(`No tasks with status ${status}`)
+        } else {
+            console.log(`${status} tasks:`)
+            filteredTasks.forEach(task => console.log(`${task.id}: ${task.description}`))
+        }
     }
 }
 
