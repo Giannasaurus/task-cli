@@ -105,8 +105,13 @@ prompt.question(`task-cli\nlist | add | update | delete\n`, (args) => {
 })
 
 function filterTasks(status, tasks) {
-    const filteredTasks = tasks.filter(task => task.status === `${status}`)
-    console.log(filteredTasks)
+    const filteredTasks = tasks.filter(task => task.status === status)
+    if (filteredTasks.length === 0) {
+        console.log(`No tasks with status ${status}`)
+    } else {
+        console.log(`${status} tasks:`)
+        filteredTasks.forEach(task => console.log(`${task.id}: ${task.description}`))
+    }
 }
 
 function handleConfirmation(message, tasksToSave) {
