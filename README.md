@@ -15,4 +15,3 @@ A command-line application to manage tasks
 ## TODO
 
 * do not close prompt after every command
-* handle errors more gracefully
