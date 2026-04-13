@@ -16,6 +16,4 @@ A command-line application to manage tasks
 
 * do not close prompt after every command
 * handle errors more gracefully
-* handle type-checking edge cases; nuances in `Number` types
-* improve ID-generation
 * flag for status
